@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MLBB Draft God Mode</title>
+
+<!-- ICON FIX -->
+<link rel="icon" href="Granger Icon.png">
+<link rel="apple-touch-icon" href="Granger Icon.png">
+
+<style>
+body {
+  margin:0;
+  background:#0b0f1a;
+  font-family:Arial;
+  color:#ffd700;
+}
+
+.header {
+  padding:15px;
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.filters {
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:10px;
+}
+
+.filter-btn {
+  padding:8px 12px;
+  border-radius:10px;
+  background:#11182a;
+  border:1px solid #333;
+  cursor:pointer;
+}
+
+.filter-btn.active {
+  border-color:#ffd700;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  padding:10px;
+}
+
+.card {
+  background:#11182a;
+  border-radius:12px;
+  padding:8px;
+  text-align:center;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.card:hover {
+  transform:scale(1.05);
+}
+
+.card img {
+  width:100%;
+  border-radius:8px;
+}
+
+.name {
+  margin-top:6px;
+  font-size:12px;
+}
+
+.selected {
+  outline:2px solid #ffd700;
+}
+
+.analyze-btn {
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#ffd700;
+  color:#000;
+  padding:14px 24px;
+  border-radius:20px;
+  font-weight:bold;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">🎮 Draft Assistant - GOD MODE</div>
+
+<div class="filters">
+  <div class="filter-btn active" onclick="setFilter('All',this)">All</div>
+  <div class="filter-btn" onclick="setFilter('Marksman',this)">Marksman</div>
+  <div class="filter-btn" onclick="setFilter('Assassin',this)">Assassin</div>
+  <div class="filter-btn" onclick="setFilter('Tank',this)">Tank</div>
+  <div class="filter-btn" onclick="setFilter('Mage',this)">Mage</div>
+  <div class="filter-btn" onclick="setFilter('Support',this)">Support</div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="analyze-btn" onclick="analyze()">Analyze Draft</div>
+
+<script>
+
+const heroes = [
+  {name:"Granger", role:"Marksman"},
+  {name:"Wanwan", role:"Marksman"},
+  {name:"Hanabi", role:"Marksman"},
+  {name:"Brody", role:"Marksman"},
+  {name:"Beatrix", role:"Marksman"},
+  {name:"Claude", role:"Marksman"},
+  {name:"Irithel", role:"Marksman"},
+  {name:"Kimmy", role:"Marksman"},
+
+  {name:"Hayabusa", role:"Assassin"},
+  {name:"Fanny", role:"Assassin"},
+  {name:"Ling", role:"Assassin"},
+  {name:"Lancelot", role:"Assassin"},
+
+  {name:"Fredrinn", role:"Tank"},
+  {name:"Akai", role:"Tank"},
+  {name:"Barats", role:"Tank"},
+  {name:"Gloo", role:"Tank"},
+
+  {name:"Valentina", role:"Mage"},
+  {name:"Xavier", role:"Mage"},
+  {name:"Yve", role:"Mage"},
+
+  {name:"Estes", role:"Support"},
+  {name:"Floryn", role:"Support"}
+];
+
+let filter = "All";
+let selected = [];
+
+function getHeroImage(name) {
+  return `https://raw.githubusercontent.com/akabab/mlbb-hero-images/main/heroes/${name.toLowerCase().replace(/[^a-z0-9]/g, '')}.png`;
+}
+
+function render() {
+  const grid = document.getElementById("grid");
+
+  const filtered = heroes.filter(h => filter==="All" || h.role===filter);
+
+  grid.innerHTML = filtered.map(h => `
+    <div class="card ${selected.includes(h.name)?'selected':''}" onclick="pick('${h.name}')">
+      <img src="${getHeroImage(h.name)}" 
+           onerror="this.src='https://via.placeholder.com/150?text=?'">
+      <div class="name">${h.name}</div>
+    </div>
+  `).join('');
+}
+
+function pick(name) {
+  if(selected.includes(name)){
+    selected = selected.filter(x=>x!==name);
+  } else {
+    selected.push(name);
+  }
+  render();
+}
+
+function setFilter(f,el) {
+  filter = f;
+  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+  el.classList.add("active");
+  render();
+}
+
+function analyze() {
+  alert("AI Draft Analysis (Tier 4 coming next 😏)\n\nSelected:\n" + selected.join(", "));
+}
+
+render();
+
+</script>
+
+</body>
+</html>
